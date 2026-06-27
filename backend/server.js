@@ -782,6 +782,27 @@ app.post('/api/visits', async (req, res) => {
 });
 
 
+// --- HEALTH CHECK & KEEP-ALIVE PINGER ---
+const https = require('https');
+const http = require('http');
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+const PING_URL = process.env.PING_URL;
+if (PING_URL) {
+  console.log(`[Pinger] Self-pinger activated for URL: ${PING_URL}`);
+  setInterval(() => {
+    const client = PING_URL.startsWith('https') ? https : http;
+    client.get(PING_URL, (res) => {
+      console.log(`[Pinger] Self-ping status: ${res.statusCode} at ${new Date().toISOString()}`);
+    }).on('error', (err) => {
+      console.error('[Pinger] Self-ping error:', err.message);
+    });
+  }, 13 * 60 * 1000); // 13 minutes (Render free tier sleeps after 15 minutes of inactivity)
+}
+
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
