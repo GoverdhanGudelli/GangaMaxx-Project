@@ -874,8 +874,10 @@ if (PING_URL) {
   }, 13 * 60 * 1000); // 13 minutes (Render free tier sleeps after 15 minutes of inactivity)
 }
 
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;
