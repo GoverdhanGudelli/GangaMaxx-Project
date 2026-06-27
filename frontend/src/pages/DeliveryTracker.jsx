@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
 import { api } from '../services/api';
 import Table from '../components/Table';
 import LiveFleetMap from '../components/LiveFleetMap';
