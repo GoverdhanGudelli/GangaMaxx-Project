@@ -3,15 +3,8 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
-const http = require('http');
-const { Server } = require('socket.io');
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: '*' }
-});
-
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
@@ -19,54 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// IN-MEMORY GPS STORE (Live positions only)
-// Structure: { [runId]: { lat, lng, driverName, vehicleNo, runNumber, timestamp } }
-// ==========================================
-const liveGpsStore = {};
-
-// ==========================================
-// SOCKET.IO — GPS & REAL-TIME EVENTS
-// ==========================================
-io.on('connection', (socket) => {
-  console.log(`[Socket] Client connected: ${socket.id}`);
-
-  // Driver broadcasts their GPS position
-  // Payload: { runId, runNumber, driverName, vehicleNo, lat, lng }
-  socket.on('driver_location_update', (data) => {
-    const { runId, lat, lng, driverName, vehicleNo, runNumber } = data;
-    if (!runId || lat == null || lng == null) return;
-
-    // Update in-memory store with latest position
-    liveGpsStore[runId] = {
-      runId,
-      lat,
-      lng,
-      driverName: driverName || 'Unknown Driver',
-      vehicleNo: vehicleNo || '',
-      runNumber: runNumber || '',
-      timestamp: new Date().toISOString()
-    };
-
-    // Broadcast to all connected admin/dispatch clients
-    io.emit('location_update', liveGpsStore[runId]);
-  });
-
-  // Driver signals they stopped sharing (run completed or left)
-  socket.on('driver_location_stop', ({ runId }) => {
-    if (runId && liveGpsStore[runId]) {
-      delete liveGpsStore[runId];
-      io.emit('location_stopped', { runId });
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`[Socket] Client disconnected: ${socket.id}`);
-  });
-});
-
-// ==========================================
 // ROUTES
 // ==========================================
+
 
 // --- AUTH ---
 app.post('/api/auth/login', async (req, res) => {
@@ -874,7 +822,7 @@ if (PING_URL) {
 }
 
 if (!process.env.VERCEL) {
-  server.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }
