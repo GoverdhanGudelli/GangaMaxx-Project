@@ -18,18 +18,9 @@ export default function Navbar({ currentTab, user }) {
   useEffect(() => {
     if (user?.employeeId) {
       fetchNotifs();
+      const interval = setInterval(fetchNotifs, 15000); // poll every 15s
+      return () => clearInterval(interval);
     }
-    
-    const socket = io('http://localhost:5000');
-    socket.on('new_notification', (newNotif) => {
-      if (newNotif.employeeId === user?.employeeId) {
-        setNotifications(prev => [newNotif, ...prev]);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-    };
   }, [user]);
 
   const fetchNotifs = async () => {

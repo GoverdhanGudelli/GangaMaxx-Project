@@ -52,6 +52,21 @@ const INITIAL_VISITS = [
 ];
 
 async function main() {
+  console.log('Clearing existing database tables...');
+  try {
+    await prisma.liveGps.deleteMany({});
+  } catch (_) {} // Ignore if table doesn't exist yet
+  await prisma.auditLog.deleteMany({});
+  await prisma.notification.deleteMany({});
+  await prisma.visit.deleteMany({});
+  await prisma.deliveryStop.deleteMany({});
+  await prisma.deliveryRun.deleteMany({});
+  await prisma.orderItem.deleteMany({});
+  await prisma.order.deleteMany({});
+  await prisma.customer.deleteMany({});
+  await prisma.product.deleteMany({});
+  await prisma.user.deleteMany({});
+
   console.log('Seeding database...');
   
   // Users

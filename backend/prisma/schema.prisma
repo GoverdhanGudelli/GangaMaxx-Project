@@ -123,3 +123,14 @@ model AuditLog {
   message    String
   createdAt  DateTime @default(now())
 }
+
+model LiveGps {
+  runId      String   @id
+  runNumber  String
+  driverName String
+  vehicleNo  String
+  lat        Float
+  lng        Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

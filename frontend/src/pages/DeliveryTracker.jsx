@@ -143,25 +143,31 @@ export default function DeliveryTracker({ user, showToast }) {
   useEffect(() => {
     fetchData();
     
-    // Connect to WebSockets
-    socketRef.current = io('http://localhost:5000');
+    // Poll live truck GPS — update raw target only (rAF loop handles smoothing)
+    const fetchActiveGps = () => {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      fetch(`${baseUrl}/gps/active`)
+        .then(r => r.json())
+        .then(data => {
+          data.forEach(entry => {
+            // Keep raw liveLocations for downstream use (liveLocations count badge etc.)
+            setLiveLocations(prev => ({ ...prev, [entry.runId]: [entry.lat, entry.lng] }));
+            // Update the rAF target ref
+            targetLocationsRef.current[entry.runId] = { lat: entry.lat, lng: entry.lng };
+            // Seed smoothed ref on first appearance so it doesn't fly in from [0,0]
+            if (!smoothedLocationsRef.current[entry.runId]) {
+              smoothedLocationsRef.current[entry.runId] = { lat: entry.lat, lng: entry.lng };
+            }
+          });
+        })
+        .catch(() => {});
+    };
+
+    fetchActiveGps();
+    const interval = setInterval(fetchActiveGps, 5000); // poll every 5s
     
-    // Listen for live truck GPS — update raw target only (rAF loop handles smoothing)
-    socketRef.current.on('location_update', (data) => {
-      // Keep raw liveLocations for downstream use (liveLocations count badge etc.)
-      setLiveLocations(prev => ({ ...prev, [data.runId]: [data.lat, data.lng] }));
-      // Update the rAF target ref
-      targetLocationsRef.current[data.runId] = { lat: data.lat, lng: data.lng };
-      // Seed smoothed ref on first appearance so it doesn't fly in from [0,0]
-      if (!smoothedLocationsRef.current[data.runId]) {
-        smoothedLocationsRef.current[data.runId] = { lat: data.lat, lng: data.lng };
-      }
-    });
-
-    // Drivers start GPS sharing manually via the toggle button
-
     return () => {
-      if (socketRef.current) socketRef.current.disconnect();
+      clearInterval(interval);
       if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current);
     };
   }, [user]);
@@ -216,9 +222,13 @@ export default function DeliveryTracker({ user, showToast }) {
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null;
       }
-      if (socketRef.current) {
-        socketRef.current.emit('driver_location_stop', { runId: selectedRun.id });
-      }
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      fetch(`${baseUrl}/gps/stop`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ runId: selectedRun.id })
+      }).catch(() => {});
+
       setGpsActive(false);
       setMyLiveLocation(null);
       showToast('GPS Sharing Stopped', 'Your location is no longer being shared.', 'info');
@@ -240,15 +250,20 @@ export default function DeliveryTracker({ user, showToast }) {
         (position) => {
           const { latitude, longitude } = position.coords;
           setMyLiveLocation([latitude, longitude]);
-          if (socketRef.current && selectedRun) {
-            socketRef.current.emit('driver_location_update', {
-              runId: selectedRun.id,
-              runNumber: selectedRun.runNumber,
-              driverName: user.name,
-              vehicleNo: selectedRun.vehicleNo,
-              lat: latitude,
-              lng: longitude
-            });
+          if (selectedRun) {
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            fetch(`${baseUrl}/gps/update`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                runId: selectedRun.id,
+                runNumber: selectedRun.runNumber,
+                driverName: user.name,
+                vehicleNo: selectedRun.vehicleNo,
+                lat: latitude,
+                lng: longitude
+              })
+            }).catch(() => {});
           }
         },
         (error) => {

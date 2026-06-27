@@ -149,43 +149,24 @@ export default function LiveFleetMap({ socketRef }) {
     return colorMapRef.current[runId];
   }, []);
 
-  // Fetch initial positions on mount
+  // Poll active GPS positions every 5 seconds
   useEffect(() => {
-    fetch('http://localhost:5000/api/gps/active')
-      .then(r => r.json())
-      .then(data => {
-        const store = {};
-        data.forEach(entry => { store[entry.runId] = entry; });
-        setLiveFleet(store);
-      })
-      .catch(() => {});
+    const fetchActive = () => {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      fetch(`${baseUrl}/gps/active`)
+        .then(r => r.json())
+        .then(data => {
+          const store = {};
+          data.forEach(entry => { store[entry.runId] = entry; });
+          setLiveFleet(store);
+        })
+        .catch(() => {});
+    };
+
+    fetchActive(); // initial fetch
+    const interval = setInterval(fetchActive, 5000); // poll every 5s
+    return () => clearInterval(interval);
   }, []);
-
-  // Subscribe to real-time socket updates
-  useEffect(() => {
-    if (!socketRef?.current) return;
-
-    const handleUpdate = (data) => {
-      // Update only the raw GPS target — InterpolatedTruckMarker handles smoothing
-      setLiveFleet(prev => ({ ...prev, [data.runId]: data }));
-    };
-
-    const handleStop = ({ runId }) => {
-      setLiveFleet(prev => {
-        const next = { ...prev };
-        delete next[runId];
-        return next;
-      });
-    };
-
-    socketRef.current.on('location_update', handleUpdate);
-    socketRef.current.on('location_stopped', handleStop);
-
-    return () => {
-      socketRef.current?.off('location_update', handleUpdate);
-      socketRef.current?.off('location_stopped', handleStop);
-    };
-  }, [socketRef]);
 
   const fleet = Object.values(liveFleet);
   const defaultCenter = [17.2570, 78.4350];

@@ -723,8 +723,79 @@ app.get('/api/audit-logs/:employeeId', async (req, res) => {
 
 // --- LIVE GPS ---
 // Returns the last known GPS position of all currently active runs
-app.get('/api/gps/active', (req, res) => {
-  res.json(Object.values(liveGpsStore));
+app.get('/api/gps/active', async (req, res) => {
+  try {
+    // Only return runs active in the last 10 minutes
+    const activeGps = await prisma.liveGps.findMany({
+      where: {
+        updatedAt: {
+          gte: new Date(Date.now() - 10 * 60 * 1000)
+        }
+      }
+    });
+    const formatted = activeGps.map(gps => ({
+      runId: gps.runId,
+      runNumber: gps.runNumber,
+      driverName: gps.driverName,
+      vehicleNo: gps.vehicleNo,
+      lat: gps.lat,
+      lng: gps.lng,
+      timestamp: gps.updatedAt.toISOString()
+    }));
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/gps/update', async (req, res) => {
+  try {
+    const { runId, runNumber, driverName, vehicleNo, lat, lng } = req.body;
+    if (!runId || lat == null || lng == null) {
+      return res.status(400).json({ error: 'Missing runId, lat, or lng' });
+    }
+    const gps = await prisma.liveGps.upsert({
+      where: { runId },
+      update: {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+        driverName: driverName || 'Unknown Driver',
+        vehicleNo: vehicleNo || '',
+        runNumber: runNumber || '',
+        updatedAt: new Date()
+      },
+      create: {
+        runId,
+        runNumber: runNumber || '',
+        driverName: driverName || 'Unknown Driver',
+        vehicleNo: vehicleNo || '',
+        lat: parseFloat(lat),
+        lng: parseFloat(lng)
+      }
+    });
+    res.json({
+      runId: gps.runId,
+      runNumber: gps.runNumber,
+      driverName: gps.driverName,
+      vehicleNo: gps.vehicleNo,
+      lat: gps.lat,
+      lng: gps.lng,
+      timestamp: gps.updatedAt.toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/gps/stop', async (req, res) => {
+  try {
+    const { runId } = req.body;
+    if (!runId) return res.status(400).json({ error: 'Missing runId' });
+    await prisma.liveGps.deleteMany({ where: { runId } });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // --- SALESMAN VISITS ---
@@ -806,3 +877,5 @@ if (PING_URL) {
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+module.exports = app;
