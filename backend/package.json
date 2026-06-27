@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "build": "npx prisma generate && npx prisma db push && node seed.js",
+    "postinstall": "prisma generate",
+    "build": "prisma generate && prisma db push && node seed.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,9 +18,6 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "socket.io": "^4.8.3"
-  },
-  "devDependencies": {
     "prisma": "^5.15.0"
   }
 }
