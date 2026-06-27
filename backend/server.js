@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
@@ -273,7 +273,7 @@ app.post('/api/orders', async (req, res) => {
       include: { items: true }
     });
 
-    // Write audit log — credit to whoever made the request
+    // Write audit log â€” credit to whoever made the request
     const actorId = req.headers['x-employee-id'] || 'system';
     const actorName = req.headers['x-user-name'] || 'System';
     await prisma.auditLog.create({
@@ -281,7 +281,7 @@ app.post('/api/orders', async (req, res) => {
         employeeId: actorId,
         userName: actorName,
         type: 'Order',
-        message: `Bulk order ${randomId} logged for ${customerName} — ₹${total.toFixed(2)}`
+        message: `Bulk order ${randomId} logged for ${customerName} â€” â‚¹${total.toFixed(2)}`
       }
     });
 
@@ -388,7 +388,7 @@ app.post('/api/deliveries', async (req, res) => {
       io.emit('new_notification', newNotif);
     }
 
-    // Dispatch audit log — credit to whoever dispatched
+    // Dispatch audit log â€” credit to whoever dispatched
     const dispatcherId = req.headers['x-employee-id'] || 'system';
     const dispatcherName = req.headers['x-user-name'] || 'System';
     await prisma.auditLog.create({
@@ -396,7 +396,7 @@ app.post('/api/deliveries', async (req, res) => {
         employeeId: dispatcherId,
         userName: dispatcherName,
         type: 'Dispatch',
-        message: `${runNumber} dispatched — Driver: ${driverName} | Vehicle: ${vehicleNo} | ${stops.length} stop(s)`
+        message: `${runNumber} dispatched â€” Driver: ${driverName} | Vehicle: ${vehicleNo} | ${stops.length} stop(s)`
       }
     });
 
@@ -514,12 +514,12 @@ app.put('/api/deliveries/:runId/stops/:orderId', async (req, res) => {
       data: { status: stopUpdate.status }
     });
 
-    // Write audit log for delivery stop update — credit the actual actor
+    // Write audit log for delivery stop update â€” credit the actual actor
     const actorId = req.headers['x-employee-id'] || 'system';
     const actorName = req.headers['x-user-name'] || 'System';
     const logMsg = stopUpdate.status === 'Delivered'
-      ? `Stop delivered to ${stop.customerName} — Signed by: ${stopUpdate.signedBy || 'N/A'} | Qty: ${stopUpdate.deliveredQty}`
-      : `Stop FAILED at ${stop.customerName} — Reason: ${stopUpdate.failedReason}`;
+      ? `Stop delivered to ${stop.customerName} â€” Signed by: ${stopUpdate.signedBy || 'N/A'} | Qty: ${stopUpdate.deliveredQty}`
+      : `Stop FAILED at ${stop.customerName} â€” Reason: ${stopUpdate.failedReason}`;
     await prisma.auditLog.create({
       data: { employeeId: actorId, userName: actorName, type: 'Dispatch', message: logMsg }
     });
@@ -789,7 +789,7 @@ app.post('/api/visits', async (req, res) => {
         employeeId: actorId,
         userName: actorName,
         type: 'Session',
-        message: `Field visit logged by ${salesmanName} at ${customerName}${followUpRequired ? ' — Follow-up required' : ''}`
+        message: `Field visit logged by ${salesmanName} at ${customerName}${followUpRequired ? ' â€” Follow-up required' : ''}`
       }
     });
 
@@ -804,6 +804,49 @@ app.post('/api/visits', async (req, res) => {
 // --- HEALTH CHECK & KEEP-ALIVE PINGER ---
 const https = require('https');
 
+
+// ONE-TIME SETUP ENDPOINT
+app.post('/api/setup', async (req, res) => {
+  if (req.headers['x-setup-secret'] !== 'gangamaxx-setup-2026') {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  try {
+    const b = require('bcryptjs');
+    try { await prisma.liveGps.deleteMany({}); } catch(_) {}
+    try { await prisma.auditLog.deleteMany({}); } catch(_) {}
+    try { await prisma.notification.deleteMany({}); } catch(_) {}
+    try { await prisma.visit.deleteMany({}); } catch(_) {}
+    try { await prisma.deliveryStop.deleteMany({}); } catch(_) {}
+    try { await prisma.deliveryRun.deleteMany({}); } catch(_) {}
+    try { await prisma.orderItem.deleteMany({}); } catch(_) {}
+    try { await prisma.order.deleteMany({}); } catch(_) {}
+    try { await prisma.customer.deleteMany({}); } catch(_) {}
+    try { await prisma.product.deleteMany({}); } catch(_) {}
+    try { await prisma.user.deleteMany({}); } catch(_) {}
+    const dh = await b.hash('password123', 10);
+    await prisma.user.createMany({ data: [
+      { employeeId: 'E1001', name: 'Arjun Mehta', role: 'Sales Admin', passwordHash: dh },
+      { employeeId: 'E1002', name: 'Raghav', role: 'Delivery Driver', passwordHash: dh },
+      { employeeId: 'E1003', name: 'Warehouse Staff', role: 'Warehouse Staff', passwordHash: dh }
+    ]});
+    await prisma.product.createMany({ data: [
+      { id: 'p1', name: 'MaxxClean Sanitizer 5L', sku: 'MX-SAN-005', category: 'Sanitizers', stock: 120, price: 45.00, msds: true, safety: 'Wear gloves.' },
+      { id: 'p2', name: 'Ganga Pine Floor Cleaner 10L', sku: 'GG-FLR-010', category: 'Floor Care', stock: 85, price: 65.00, msds: true, safety: 'Dilute 1:50.' },
+      { id: 'p3', name: 'EcoSuds Liquid Soap 20L', sku: 'EC-SOAP-020', category: 'Hand Hygiene', stock: 200, price: 95.00, msds: true, safety: 'Eye contact: rinse.' },
+      { id: 'p4', name: 'HypoGlow Bleach Concentrate 5L', sku: 'HP-BLC-005', category: 'Disinfectants', stock: 45, price: 32.00, msds: true, safety: 'Corrosive.' },
+      { id: 'p5', name: 'AeroFresh Deodorizer Spray 1L', sku: 'AE-DEO-001', category: 'Air Care', stock: 160, price: 18.50, msds: false, safety: 'Flammable.' }
+    ]});
+    await prisma.customer.createMany({ data: [
+      { id: 'c1', name: 'St. Jude General Hospital', type: 'Hospital', tier: 'Platinum', creditLimit: 10000, creditBalance: 4200, creditStatus: 'Good', address: '45 Health Blvd', passwordHash: dh },
+      { id: 'c2', name: 'Apex International School', type: 'School', tier: 'Gold', creditLimit: 5000, creditBalance: 5200, creditStatus: 'Overlimit', address: '12 Academy Crescent', passwordHash: dh },
+      { id: 'c3', name: 'Grand Royal Hotel', type: 'Hotel', tier: 'Platinum', creditLimit: 15000, creditBalance: 8500, creditStatus: 'Good', address: '88 Hospitality Marina', passwordHash: dh },
+      { id: 'c4', name: 'QuickClean Janitorial', type: 'Dealer', tier: 'Silver', creditLimit: 3000, creditBalance: 1200, creditStatus: 'Good', address: '6 Industrial Hub', passwordHash: dh }
+    ]});
+    res.json({ success: true, message: 'Seeded! Login: E1001 / password123' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -828,3 +871,4 @@ if (!process.env.VERCEL) {
 }
 
 module.exports = app;
+
