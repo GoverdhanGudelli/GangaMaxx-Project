@@ -855,7 +855,6 @@ app.post('/api/visits', async (req, res) => {
 
 // --- HEALTH CHECK & KEEP-ALIVE PINGER ---
 const https = require('https');
-const http = require('http');
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
