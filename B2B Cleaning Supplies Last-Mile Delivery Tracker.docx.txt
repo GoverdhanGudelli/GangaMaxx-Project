@@ -1,0 +1,741 @@
+﻿B2B Cleaning Supplies Last-Mile Delivery Tracker
+Internship Reference Document
+Company
+	Ganga Maxx Marketplace
+	Solution
+	B2B Cleaning Supplies Last-Mile Delivery Tracker
+	What it solves
+	Tracks bulk delivery runs to institutions — schools, hospitals, hotels — with delivery sequence, staff assignment, quantity delivered per stop, and digital proof of delivery photo
+	Why useful
+	Ganga Maxx delivers to multiple institutions in a single run; a route-based delivery tracker ensures correct quantities reach each institution and reduces return trips
+	Duration
+	01 June 2026 - 30 June 2026 (26 Working Days)
+	Team size
+	3 Students per team
+	Roles
+	Student 1 - Frontend | Student 2 - Backend | Student 3 - Testing & Deployment
+	
+
+Introduction Session
+This section covers everything the instructor should explain in the Introduction Video (Day 1). Students must watch and understand this before any coding begins.
+	
+
+1. About the Company
+Ganga Maxx Marketplace is a business operating in B2B cleaning and hygiene product sales, institutional customer ordering, warehouse stock control, cleaning kit bundling, credit account management, delivery tracking, salesman visits, repeat reorder workflows, contract pricing, tier discounts, and chemical handling compliance. The team needs a clear digital system to manage day-to-day records, customer actions, staff ownership, and timely follow-ups.
+For this internship project, students will study the real business flow and build a working prototype named B2B Cleaning Supplies Last-Mile Delivery Tracker. The goal is to convert the given solution idea into a usable software reference implementation that supports the company team in practical operations.
+2. The Problem They Face
+Every day, the company receives customer requests, operational updates, and follow-up requirements that need quick action.
+Problem: Tracks bulk delivery runs to institutions — schools, hospitals, hotels — with delivery sequence, staff assignment, quantity delivered per stop, and digital proof of delivery photo. At present, this type of work can become slow or scattered when it depends only on calls, WhatsApp messages, spreadsheets, or manual follow-up.
+	
+
+This results in:
+- Wasted time for the team
+- Slow response to important customers or priority cases
+- Missed revenue opportunities because follow-ups are delayed
+- No clean system to track progress, ownership, and history
+3. What We Are Building
+We are building B2B Cleaning Supplies Last-Mile Delivery Tracker - a smart working prototype that solves this problem end to end.
+How the system works:
+- Step 1 - Institutional Customer/Facility Manager/Housekeeping Manager/Dealer enters or updates information through the B2B product catalog, bulk order portal, warehouse management screen, institutional CRM, product selector assistant, quotation builder, delivery tracker, salesman visit form, reorder dashboard, contract pricing screen, or compliance portal
+- Step 2 - Backend APIs validate the input and save it with source, status, owner, and timestamp
+- Step 3 - The system applies last-mile delivery workflow that tracks B2B cleaning supply orders from dispatch to customer acknowledgement
+- Step 4 - AI or rule-based logic prepares useful outputs such as recommendations, summaries, alerts, or messages
+- Step 5 - Sales Admin/Warehouse Staff/Salesman/Delivery Coordinator/Accounts Manager/Compliance Admin views records, status, priorities, and action history in the dashboard
+- Step 6 - Automated reminders, confirmations, or follow-up messages are generated where required
+- Step 7 - The final deployed prototype is tested, documented, and presented with report, PPT, GitHub, and demo video
+4. Technology Stack
+The following technologies will be used in this prototype:
+Layer
+	Technology
+	Role in This Project
+	Frontend
+	HTML, CSS, JavaScript / React
+	Delivery run dashboard, order-to-vehicle assignment, delivery status timeline, customer acknowledgement fields, failed delivery reasons, and route report view
+	Backend
+	Node.js Express or Python Flask
+	Delivery APIs, assignment routes, status transition logic, acknowledgement storage, failed delivery reason rules, and delivery reports
+	AI Layer
+	Rule-based workflow logic; optional AI prompts for summaries and suggestions
+	Recommend cleaning products, build cleaning kits, generate quotation bundles, answer WhatsApp sales questions, summarise institutional consumption patterns, and explain safe chemical handling requirements
+	Database
+	MySQL / PostgreSQL / Firebase
+	Store cleaning products, hygiene SKUs, institutions, customers, warehouses, stock batches, order quantities, consumption patterns, quotations, kits, credit accounts, aging reports, delivery runs, salesman visits, reorder reminders, contract prices, tier discounts, MSDS documents, chemical handling records, and compliance acknowledgements
+	Messaging/Reports
+	WhatsApp Business API / Email API / PDF or CSV export
+	Send confirmations, reminders, escalations, customer updates, invoices, and admin reports
+	
+
+5. Team Structure
+Each team has exactly 3 students. The work is divided by role throughout the entire 26-working-day internship:
+Student 1
+Frontend
+	Student 2
+Backend
+	Student 3
+Testing & Deployment
+	Delivery run dashboard, order-to-vehicle assignment, delivery status timeline, customer acknowledgement fields, failed delivery reasons, and route report view
+	Delivery APIs, assignment routes, status transition logic, acknowledgement storage, failed delivery reason rules, and delivery reports
+	Catalog testing, bulk order testing, warehouse stock testing, CRM testing, consumption analytics validation, quotation testing, credit aging testing, delivery tracker testing, salesman visit testing, reorder reminder testing, contract pricing testing, compliance workflow testing, AI output testing, API testing, GitHub management, and deployment validation
+	
+
+6. What Students Will Build by End of 26 Working Days
+- A working frontend for B2B Cleaning Supplies Last-Mile Delivery Tracker connected to backend APIs
+- A backend system that stores records, validates inputs, and returns useful status/output
+- An AI or rule-based logic module that generates recommendations, summaries, alerts, or workflow outputs
+- A B2B cleaning supplies and institutional sales dashboard showing records, statuses, actions, reports, and counts
+- A deployed prototype accessible through a URL
+- Full project documentation, PPT presentation, GitHub repository, and demo video
+7. Review Milestones
+There are 3 mandatory review presentations. Missing any review without valid reason = FAIL in internship evaluation.
+	
+
+Review
+	Date
+	What to Present
+	Review 1
+	06 June 2026
+	Company intro, project title, problem statement, objectives, abstract
+	Review 2
+	19-20 June 2026
+	Literature survey, system analysis, architecture, DB design, initial code
+	Review 3
+	29-30 June 2026
+	Full working prototype demo, report, PPT, GitHub, demo video
+	
+
+________________
+
+
+Day-wise Plan
+Each working day is divided into 3 role-specific task columns. Student 1 = Frontend, Student 2 = Backend, Student 3 = Testing & Deployment. All three work in parallel.
+	
+
+Day 1
+	Week 1
+	01 June 2026 (Mon) - Introduction Session
+	The instructor explains the company background, project overview, problem statement, technology stack, team roles, 26-working-day plan, and review milestones for B2B Cleaning Supplies Last-Mile Delivery Tracker. No coding today; the goal is complete understanding.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Watch and re-read the Introduction Section
+- Understand the frontend modules: Delivery run dashboard, order-to-vehicle assignment, delivery status timeline, customer acknowledgement fields, failed delivery reasons, and route report view
+- Sketch 3 screens on paper: input screen, workflow/assistant screen, dashboard
+- Start Day 1 logbook entry
+Student 2 - Backend
+	- Watch and re-read the Introduction Section
+- Understand backend responsibilities: Delivery APIs, assignment routes, status transition logic, acknowledgement storage, failed delivery reason rules, and delivery reports
+- Write 5 backend questions about APIs, database, business rules, and deployment
+- Start Day 1 logbook entry
+Student 3 - Testing & Deployment
+	- Watch and re-read the Introduction Section
+- Research what testing means in a software project
+- Research GitHub and why version control is used
+- Create GitHub account if needed and start Day 1 logbook entry
+Deliverable
+	Groups formed. Logbook Day 1 entries written. All students understand project overview.
+	
+
+Day 2
+	Week 1
+	02 June 2026 (Tue) - Problem Statement + Abstract
+	Students document the business problem and write a project abstract for B2B Cleaning Supplies Last-Mile Delivery Tracker. These are Review 1 deliverables.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Draft the problem statement in 4-5 sentences from the user interface perspective
+- List screens needed for Institutional Customer/Facility Manager/Housekeeping Manager/Dealer and Sales Admin/Warehouse Staff/Salesman/Delivery Coordinator/Accounts Manager/Compliance Admin
+- Write abstract focusing on user value and business impact
+Student 2 - Backend
+	- Draft the problem statement from technical/system perspective
+- List backend operations: create, read, update status, process logic, dashboard reports
+- Write abstract explaining APIs, database, and logic flow
+Student 3 - Testing & Deployment
+	- Create team GitHub repository
+- Set up folders: /frontend, /backend, /docs, /tests
+- Push README.md with title, company, team names, and tech stack
+Deliverable
+	Problem Statement draft. Project Abstract draft. GitHub repository created.
+	
+
+Day 3
+	Week 1
+	03 June 2026 (Wed) - Project Objectives + Tech Stack Setup
+	Students write objectives and prepare development environment for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Write 5 objectives from user/frontend perspective
+- Install VS Code and Node.js
+- Create frontend folder and first HTML/React screen
+Student 2 - Backend
+	- Write 5 objectives from backend/system perspective
+- Install Node.js Express or Python Flask setup
+- Create backend server with one test route
+Student 3 - Testing & Deployment
+	- Write 5 objectives from testing and quality perspective
+- Install Postman for API testing
+- Test backend Hello route and record result in test log
+Deliverable
+	5 Project Objectives written. Development environment set up. First test documented.
+	
+
+Day 4
+	Week 1
+	04 June 2026 (Thu) - Use Case Design + Wireframes
+	Students design use cases and wireframes before coding major screens for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Draw wireframes for input form, processing/workflow screen, dashboard, detail page
+- Use paper or Figma free version
+- Upload wireframe images to /docs folder
+Student 2 - Backend
+	- Draw use case diagram with actors: Institutional Customer/Facility Manager/Housekeeping Manager/Dealer, Sales Admin/Warehouse Staff/Salesman/Delivery Coordinator/Accounts Manager/Compliance Admin, Admin
+- Write endpoint list: POST/create, GET/list, GET/detail, POST/process, GET/dashboard
+- Define request and response fields for each API
+Student 3 - Testing & Deployment
+	- Review wireframes and use case diagram for completeness
+- Write initial test cases for each use case
+- Push test case document to /docs
+Deliverable
+	Wireframes, use case diagram, API endpoint list, and test cases completed.
+	
+
+________________
+
+
+Day 5
+	Week 1
+	05 June 2026 (Fri) - Review 1 Preparation
+	All three students prepare Review 1 PPT and complete a mock presentation.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Build slides: company intro, project title, user screens, wireframes
+- Keep slides clean and not overcrowded
+- Present frontend sections in team mock
+Student 2 - Backend
+	- Build slides: problem statement, proposed system, technology stack
+- Prepare simple explanation of backend approach
+- Present backend sections in team mock
+Student 3 - Testing & Deployment
+	- Build slides: objectives, abstract, GitHub repo link, test plan overview
+- Verify all documents are pushed to GitHub
+- Present testing sections in team mock
+Deliverable
+	Review 1 PPT slides completed and practiced. All docs pushed to GitHub.
+	
+
+Day 6
+	Week 1
+	06 June 2026 (Sat) - REVIEW PRESENTATION 1
+	Team presents company intro, project title, problem statement, objectives, abstract, wireframes, GitHub setup, and technology stack.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Present wireframes and UI plan
+- Answer questions about frontend choices
+- Note all feedback received
+Student 2 - Backend
+	- Present problem statement, proposed system, and tech stack
+- Answer questions about backend approach
+- Note all feedback received
+Student 3 - Testing & Deployment
+	- Present GitHub repository, objectives, and test case plan
+- Answer questions on testing strategy
+- Note all feedback received
+Deliverable
+	Review 1 completed. Feedback documented. Score received.
+	
+
+________________
+
+
+Day 7
+	Week 2
+	08 June 2026 (Mon) - Review 1 Feedback + Week 2 Prep
+	Team applies Review 1 feedback and starts research for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Update wireframes based on feedback
+- Research similar UI patterns related to B2B cleaning supplies and institutional sales dashboard
+- Begin HTML/React layout for main input screen
+Student 2 - Backend
+	- Update problem statement and objectives based on feedback
+- Research backend patterns for similar systems
+- Begin reading REST API structure and validation rules
+Student 3 - Testing & Deployment
+	- Update test case document based on feedback
+- Create test tracker: Test ID, Description, Expected, Actual, Pass/Fail
+- Collect 2-3 references for literature survey
+Deliverable
+	Review 1 corrections completed. Week 2 research started.
+	
+
+Day 8
+	Week 2
+	09 June 2026 (Tue) - Literature Survey + Existing System Analysis
+	Students research existing tools and document how B2B Cleaning Supplies Last-Mile Delivery Tracker is different.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Study 2 existing products or websites with similar B2B cleaning supplies and institutional sales dashboard features
+- Note dashboard layout, filters, status indicators, and limitations
+- Write UI/UX comparison notes
+Student 2 - Backend
+	- Study 2-3 existing systems from backend/workflow perspective
+- Write existing system analysis with features and limitations
+- Define the gap filled by the proposed system
+Student 3 - Testing & Deployment
+	- Summarise 3 references in 5 bullet points each
+- Add references to literature survey document
+- Check source names and links are clearly mentioned
+Deliverable
+	Existing System Analysis document. Literature Survey with 3+ references.
+	
+
+________________
+
+
+Day 9
+	Week 2
+	10 June 2026 (Wed) - Proposed System Description + DB Design
+	Students describe the proposed system and design database tables for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Write proposed system description for each screen
+- Create comparison table: Existing System vs Proposed System
+- Refine wireframes based on final proposed flow
+Student 2 - Backend
+	- Design database schema to store cleaning products, hygiene SKUs, institutions, customers, warehouses, stock batches, order quantities, consumption patterns, quotations, kits, credit accounts, aging reports, delivery runs, salesman visits, reorder reminders, contract prices, tier discounts, MSDS documents, chemical handling records, and compliance acknowledgements
+- Create ER diagram with relationships and key fields
+- Document validation rules and status values
+Student 3 - Testing & Deployment
+	- Write test plan mapped to each feature
+- Review ER diagram for missing fields
+- Push ER diagram and test plan to GitHub
+Deliverable
+	Proposed System Description. ER Diagram. Database schema. Test plan.
+	
+
+Day 10
+	Week 2
+	11 June 2026 (Thu) - Database Setup + First Backend Route + Main Form
+	Backend database is created and the first API route works. Frontend builds the main form for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Build full form structure with required fields
+- Apply basic CSS matching wireframe
+- Test form layout in browser
+Student 2 - Backend
+	- Set up MySQL/PostgreSQL/Firebase database
+- Create main table using Day 9 schema
+- Build POST/create route and test with Postman
+Student 3 - Testing & Deployment
+	- Test POST/create with valid data
+- Test missing fields and invalid data
+- Document results in test tracker
+Deliverable
+	Database table created. POST/create API working. Main form built.
+	
+
+________________
+
+
+Day 11
+	Week 2
+	12 June 2026 (Fri) - List API + Dashboard HTML
+	Backend adds list route. Frontend creates static B2B cleaning supplies and institutional sales dashboard layout.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Build dashboard HTML/React structure with cards/table view
+- Add columns: name/title, status, date, owner/amount/score as applicable
+- Use dummy records to verify layout
+Student 2 - Backend
+	- Build GET/list route returning all records as JSON
+- Add simple filters such as status/type/date
+- Test list and filter routes in Postman
+Student 3 - Testing & Deployment
+	- Test GET/list JSON structure
+- Test filters with sample data
+- Push tested code to GitHub
+Deliverable
+	GET/list API working. Dashboard HTML structure complete. Tests passing.
+	
+
+Day 12
+	Week 2
+	13 June 2026 (Sat) - GitHub Workflow + Environment Validation
+	Team consolidates code into shared GitHub repo and validates merged setup.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Create feature/frontend branch
+- Push frontend form and dashboard files
+- Raise pull request to main
+Student 2 - Backend
+	- Create feature/backend-api branch
+- Push backend routes and database scripts
+- Raise pull request to main
+Student 3 - Testing & Deployment
+	- Review pull requests for naming, comments, and structure
+- Test merged main branch end-to-end locally
+- Update test tracker with merge validation
+Deliverable
+	GitHub branches created. PRs raised and merged. Main branch stable and tested.
+	
+
+________________
+
+
+Day 13
+	Week 3
+	15 June 2026 (Mon) - Core Logic Design + Workflow Plan
+	Team designs the core logic before deeper implementation for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Design workflow screen or assistant flow based on user journey
+- Write exact labels/messages shown to users
+- Create static mockup for the workflow screen
+Student 2 - Backend
+	- Define last-mile delivery workflow that tracks B2B cleaning supply orders from dispatch to customer acknowledgement in a clear rule document
+- Write processing function or service module
+- Test logic with sample inputs
+Student 3 - Testing & Deployment
+	- Prepare 10 sample test cases for core logic
+- Review edge cases and skipped/invalid inputs
+- Document expected output for each case
+Deliverable
+	Core logic document. Working processing function. Workflow UI mockup. Test cases.
+	
+
+Day 14
+	Week 3
+	16 June 2026 (Tue) - Week 2 Review Prep + Literature Survey Final
+	Week 2 documents and Review 2 presentation are finalised.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Finalise frontend files: form, dashboard, workflow mockup
+- Prepare slides: wireframes, UI design, comparison table
+- Do mock presentation
+Student 2 - Backend
+	- Finalise backend files: schema, APIs, processing logic
+- Prepare slides: architecture, DB design, core logic
+- Do mock presentation
+Student 3 - Testing & Deployment
+	- Finalise literature survey with 5+ references
+- Prepare slides: test plan, existing system analysis, GitHub status
+- Ensure repo is clean and updated
+Deliverable
+	Literature survey final. Week 2 documents complete. Review 2 PPT ready.
+	
+
+________________
+
+
+Day 15
+	Week 3
+	17 June 2026 (Wed) - System Architecture Diagram + Full Stack Plan
+	Students create architecture diagram and integration plan for B2B Cleaning Supplies Last-Mile Delivery Tracker.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Create architecture diagram using draw.io
+- Label frontend, backend API, database, AI/rule engine, notification/reporting service
+- Export image and add to /docs
+Student 2 - Backend
+	- Review backend components in architecture
+- Plan how frontend calls backend APIs
+- Confirm API contracts and response structures
+Student 3 - Testing & Deployment
+	- Review architecture for testability
+- Create integration test plan
+- Push architecture and test plan to GitHub
+Deliverable
+	Final System Architecture Diagram. Integration test plan.
+	
+
+Day 16
+	Week 3
+	18 June 2026 (Thu) - Connect Frontend Form to Backend API
+	Main form now sends real data to backend. This is the first end-to-end integration.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Add fetch/axios call from form to POST API
+- Show success message after submit
+- Show client-side validation errors
+Student 2 - Backend
+	- Return clean JSON response from POST API
+- Add server-side validation for required fields
+- Test from browser and Postman
+Student 3 - Testing & Deployment
+	- Test full form submit flow
+- Check database record creation
+- Test empty fields, long text, and special characters
+Deliverable
+	Frontend form connected to backend API. End-to-end create flow working.
+	
+
+________________
+
+
+Day 17
+	Week 3
+	19 June 2026 (Fri) - REVIEW PRESENTATION 2 - Day 1
+	First batch presents literature survey, existing system analysis, architecture, database design, and initial working code.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Present wireframes, workflow UI, dashboard screenshots
+- Show live form in browser
+- Answer questions on UI decisions
+Student 2 - Backend
+	- Present architecture diagram, database schema, and core logic
+- Show backend routes working in Postman
+- Answer technical implementation questions
+Student 3 - Testing & Deployment
+	- Present test plan, existing system analysis, GitHub repository
+- Show current test results
+- Answer testing and quality questions
+Deliverable
+	Review 2 Day 1 completed. Scores received. Feedback documented.
+	
+
+Day 18
+	Week 3
+	20 June 2026 (Sat) - REVIEW PRESENTATION 2 - Day 2 + Core Feature Build
+	Remaining teams present Review 2. After presentations, teams continue building the main feature flow.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Present Review 2 if in second batch
+- Build status/action section in dashboard
+- Add UI for history or generated output where needed
+Student 2 - Backend
+	- Present Review 2 if in second batch
+- Build POST/process or status-update route
+- Save processing result and history in database
+Student 3 - Testing & Deployment
+	- Present Review 2 if in second batch
+- Test process/status route
+- Write 5 additional test cases for main logic
+Deliverable
+	Review 2 Day 2 completed. Main processing/status route started.
+	
+
+________________
+
+
+Day 19
+	Week 4
+	22 June 2026 (Mon) - Core Workflow Complete + Alerts/Outputs
+	The main B2B Cleaning Supplies Last-Mile Delivery Tracker workflow is completed with alerts, output/history, or status updates.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Show generated output/status/result on dashboard
+- Add badges or alerts for priority records
+- Add refresh button or auto-refresh
+Student 2 - Backend
+	- Complete processing trigger and status update logic
+- Build notification/reporting endpoint if required
+- Store output, result, and action history
+Student 3 - Testing & Deployment
+	- Test full pipeline from input to output/dashboard
+- Test different record types and statuses
+- Document all results and bugs
+Deliverable
+	Core workflow fully working. Alerts/outputs visible. Pipeline tests documented.
+	
+
+Day 20
+	Week 4
+	23 June 2026 (Tue) - Detail Page + Full Integration Test
+	A detail page is built and full integration testing runs across the entire system.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Build detail page opened from dashboard item
+- Show complete record details, status, notes, output, and history
+- Add Back button to return to dashboard
+Student 2 - Backend
+	- Build GET/detail route
+- Return main record with related history/output data
+- Verify joins or linked records are correct
+Student 3 - Testing & Deployment
+	- Run full integration test: create -> process -> dashboard -> detail
+- Test at least 5 records with different statuses
+- Document all results and report bugs
+Deliverable
+	Detail Page working. GET/detail API working. Full integration test passed.
+	
+
+________________
+
+
+Day 21
+	Week 4
+	24 June 2026 (Wed) - UI Polish + Error Handling
+	The prototype gets a polish pass and clear error handling is added.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Clean CSS: consistent fonts, spacing, colors, and responsive layout
+- Add loading state for submit/dashboard load
+- Add empty state when no records exist
+Student 2 - Backend
+	- Add try/catch error handling to all backend routes
+- Return meaningful errors: 400 for bad input, 500 for server error
+- Add console logs for debugging
+Student 3 - Testing & Deployment
+	- Test bad input, missing data, failed API, and empty dashboard
+- Verify frontend error messages are clear
+- Update tracker with error handling tests
+Deliverable
+	Polished UI. Error handling on all routes. Error test cases passing.
+	
+
+Day 22
+	Week 4
+	25 June 2026 (Thu) - Deployment Setup
+	The prototype is deployed so it can be accessed through a URL instead of localhost.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Prepare frontend for deployment
+- Update API URLs to deployed backend URL
+- Take screenshots of all screens for report
+Student 2 - Backend
+	- Deploy backend to Render/Railway or equivalent free tier
+- Deploy database or configure Firebase
+- Test all API routes at deployed URL
+Student 3 - Testing & Deployment
+	- Test deployed version end-to-end
+- Document deployment URL and test results
+- Create deployment guide document
+Deliverable
+	Backend deployed. Database deployed. Frontend connected to production. Deployment guide written.
+	
+
+________________
+
+
+Day 23
+	Week 4
+	26 June 2026 (Fri) - Final Testing + Bug Fixes + Report Part 1
+	Deployed B2B Cleaning Supplies Last-Mile Delivery Tracker is tested end-to-end. Bug fixes are completed and report writing begins.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Test all screens on deployed version
+- Fix responsive layout issues
+- Write Introduction chapter and UI design section
+Student 2 - Backend
+	- Review deployed backend routes
+- Verify database queries with real data
+- Write System Analysis and Implementation chapters
+Student 3 - Testing & Deployment
+	- Run final test suite on deployed URL
+- Create bug report with fixed and known issues
+- Write Literature Survey and Testing chapter draft
+Deliverable
+	Final test suite results. Bug report. Report Part 1 draft completed.
+	
+
+Day 24
+	Week 4
+	27 June 2026 (Sat) - Project Report Part 2 + Demo Video + Final PPT
+	Report, demo video, final PPT, and mock presentation are completed before final review.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Record 3-5 minute frontend demo
+- Upload demo video to Google Drive/YouTube unlisted
+- Build PPT slides: Title, Introduction, Problem, Wireframes, Live Demo
+Student 2 - Backend
+	- Write Conclusion and References
+- Review report for technical accuracy
+- Build PPT slides: Architecture, DB design, APIs, logic
+Student 3 - Testing & Deployment
+	- Finalise Testing chapter
+- Proof-read report and export PDF
+- Build PPT slides: Testing, Bug report, Deployment, Conclusion, Future Scope
+Deliverable
+	Complete Project Report PDF. Demo video linked. Final PPT ready. Mock presentation done.
+	
+
+________________
+
+
+Day 25
+	Week 5
+	29 June 2026 (Mon) - REVIEW PRESENTATION 3 - Day 1 + Final Submissions
+	First batch delivers final review with live demo and submits all deliverables.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Present frontend live demo and screens
+- Answer questions on UI decisions and implementation
+Student 2 - Backend
+	- Present backend architecture, APIs, database, and logic
+- Answer technical implementation questions
+Student 3 - Testing & Deployment
+	- Present testing results, deployment URL, GitHub, report PDF, and demo video
+- Submit final checklist: project, GitHub, PPT, report, demo video, diary
+Deliverable
+	Review 3 Day 1 complete. Final deliverables submitted for first batch.
+	
+
+Day 26
+	Week 5
+	30 June 2026 (Tue) - REVIEW PRESENTATION 3 - Day 2 + Internship Closing
+	Remaining teams deliver final review. Internship closes with team learning discussion.
+	
+
+Tasks - All 3 Students
+Student 1 - Frontend
+	- Present Review 3 if second batch
+- Share frontend learnings and challenges
+- Write final logbook entry
+Student 2 - Backend
+	- Present Review 3 if second batch
+- Share backend learnings and technical decisions
+- Write final logbook entry
+Student 3 - Testing & Deployment
+	- Present Review 3 if second batch
+- Share testing/deployment learnings
+- Write final logbook entry and confirm internship closure
+Deliverable
+	Review 3 Day 2 complete. All deliverables submitted. Project diary complete. Internship closed.

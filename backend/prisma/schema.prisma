@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String @id @default(uuid())
+  employeeId   String @unique
+  name         String
+  role         String
+  passwordHash String
+}
+
+model Product {
+  id       String @id
+  name     String
+  sku      String
+  category String
+  stock    Int
+  price    Float
+  msds     Boolean
+  safety   String
+}
+
+model Customer {
+  id            String @id
+  name          String
+  type          String
+  tier          String
+  creditLimit   Float
+  creditBalance Float
+  creditStatus  String
+  address       String
+  passwordHash  String @default("$2a$10$wN9M.M.4oM8iQJbH1.9XhONkL2nJ5Q9A.PZzH/Z.bZ3wXoD8k8V1W")
+}
+
+model Order {
+  id                String @id
+  customerId        String
+  customerName      String
+  total             Float
+  status            String
+  orderDate         String
+  warehouse         String
+  complianceCleared Boolean
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  orderId   String
+  productId String
+  name      String
+  qty       Int
+  price     Float
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model DeliveryRun {
+  id         String @id @default(uuid())
+  runNumber  String
+  driverName String
+  vehicleNo  String
+  date       String
+  status     String
+
+  stops DeliveryStop[]
+}
+
+model DeliveryStop {
+  id            String @id @default(uuid())
+  deliveryRunId String
+  orderId       String
+  customerName  String
+  address       String
+  sequence      Int
+  qty           Int
+  status        String
+  deliveredQty  Int
+  failedReason  String
+  podPhoto      String
+  signedBy      String
+
+  deliveryRun DeliveryRun @relation(fields: [deliveryRunId], references: [id])
+}
+
+model Visit {
+  id                    String  @id
+  salesmanName          String
+  customerName          String
+  visitDate             String
+  notes                 String
+  followUpRequired      Boolean
+  repeatReorderCheckbox Boolean
+}
+
+model Vehicle {
+  id      String @id @default(uuid())
+  plateNo String @unique
+  model   String
+  status  String @default("Available")
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  employeeId String
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  employeeId String
+  userName   String
+  type       String   // Session | Order | Dispatch | Credit | Inventory
+  message    String
+  createdAt  DateTime @default(now())
+}
