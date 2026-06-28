@@ -2,14 +2,14 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://gangamaxx-project.onrender.com/api';
 
 const fetchAPI = async (endpoint, options = {}) => {
-  // Read current session to attach actor identity to every request
   let employeeId = '';
   let userName = '';
+  let token = '';
   try {
     const session = JSON.parse(localStorage.getItem('gm_session') || '{}');
-
     employeeId = session.employeeId || '';
     userName = session.name || '';
+    token = session.token || localStorage.getItem('gm_token') || '';
   } catch (_) { }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -18,9 +18,19 @@ const fetchAPI = async (endpoint, options = {}) => {
       'Content-Type': 'application/json',
       'X-Employee-Id': employeeId,
       'X-User-Name': userName,
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options.headers,
     },
   });
+
+  // Auto-logout on token expiry
+  if (res.status === 401) {
+    localStorage.removeItem('gm_session');
+    localStorage.removeItem('gm_token');
+    if (window.location.pathname !== '/') window.location.href = '/';
+    throw new Error('Session expired. Please log in again.');
+  }
+
   if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
   return res.json();
 };
@@ -45,27 +55,28 @@ export const api = {
 
   // Products
   getProducts: async () => fetchAPI('/products'),
-  addProduct: async (product) => {
-    console.warn('addProduct not yet supported by new backend');
-  },
-  updateProduct: async (id, updatedData) => {
-    console.warn('updateProduct not yet supported by new backend');
-  },
+  addProduct: async (product) => fetchAPI('/products', {
+    method: 'POST',
+    body: JSON.stringify(product),
+  }),
+  updateProduct: async (id, updatedData) => fetchAPI(`/products/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updatedData),
+  }),
+  deleteProduct: async (id) => fetchAPI(`/products/${id}`, {
+    method: 'DELETE',
+  }),
 
   // Customers
   getCustomers: async () => {
     const custs = await fetchAPI('/customers');
     return custs.map(c => {
-      // Hardcoded Ranga Reddy district coordinates for the demo
       let lat = 17.2570;
       let lng = 78.4350;
-      if (c.id === 'c1') { lat = 17.3080; lng = 78.1360; } // Chevella
-      else if (c.id === 'c2') { lat = 17.3275; lng = 78.2728; } // Moinabad
-      else if (c.id === 'c3') { lat = 17.1950; lng = 78.6465; } // Ibrahimpatnam
-      else {
-        lat = 17.2 + (Math.random() * 0.15);
-        lng = 78.2 + (Math.random() * 0.4);
-      }
+      if (c.id === 'c1') { lat = 17.3080; lng = 78.1360; }
+      else if (c.id === 'c2') { lat = 17.3275; lng = 78.2728; }
+      else if (c.id === 'c3') { lat = 17.1950; lng = 78.6465; }
+      else { lat = 17.2 + (Math.random() * 0.15); lng = 78.2 + (Math.random() * 0.4); }
       return { ...c, lat, lng };
     });
   },
@@ -73,9 +84,10 @@ export const api = {
     method: 'POST',
     body: JSON.stringify(customer)
   }),
-  updateCustomer: async (id, updatedData) => {
-    console.warn('updateCustomer not yet supported by new backend');
-  },
+  updateCustomer: async (id, updatedData) => fetchAPI(`/customers/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updatedData),
+  }),
 
   // Orders
   getOrders: async () => fetchAPI('/orders'),

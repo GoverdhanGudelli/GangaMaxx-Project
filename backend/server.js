@@ -1,6 +1,8 @@
-﻿const express = require('express');
+const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const http = require('http');
+const https = require('https');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
@@ -8,8 +10,10 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(express.json());
+// CORS â€” allow frontend origin or all in dev
+const ALLOWED_ORIGIN = process.env.FRONTEND_URL || '*';
+app.use(cors({ origin: ALLOWED_ORIGIN }));
+app.use(express.json({ limit: '10mb' }));
 
 // ==========================================
 // ROUTES
@@ -48,7 +52,12 @@ app.post('/api/auth/login', async (req, res) => {
       }
     });
 
-    res.json(safeUser);
+    const token = jwt.sign(
+      { id: user.id, employeeId: user.employeeId, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '8h' }
+    );
+    res.json({ ...safeUser, token });
     
   } catch (error) {
     console.error(error);
@@ -98,7 +107,12 @@ app.post('/api/auth/customer-login', async (req, res) => {
       }
     });
 
-    res.json(sessionData);
+    const token = jwt.sign(
+      { id: customer.id, employeeId: customer.id, role: 'Customer' },
+      JWT_SECRET,
+      { expiresIn: '8h' }
+    );
+    res.json({ ...sessionData, token });
     
   } catch (error) {
     console.error(error);
@@ -191,10 +205,12 @@ app.get('/api/products', async (req, res) => {
 });
 
 // --- CUSTOMERS ---
+const stripHash = ({ passwordHash, ...rest }) => rest;
+
 app.get('/api/customers', async (req, res) => {
   try {
     const customers = await prisma.customer.findMany();
-    res.json(customers);
+    res.json(customers.map(stripHash));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -202,19 +218,33 @@ app.get('/api/customers', async (req, res) => {
 
 app.post('/api/customers', async (req, res) => {
   try {
-    const data = req.body;
-    // Generate a simple ID like c5, c102, etc.
+    const { name, type, tier, creditLimit, creditBalance, creditStatus, address } = req.body;
+    if (!name || !type || !tier) {
+      return res.status(400).json({ error: 'name, type, and tier are required' });
+    }
     const randomId = `c${Math.floor(Math.random() * 9000) + 1000}`;
+    const defaultHash = await bcrypt.hash('password123', 10);
     const newCustomer = await prisma.customer.create({
-      data: {
-        id: randomId,
-        ...data
-      }
+      data: { id: randomId, name, type, tier, creditLimit: creditLimit || 0, creditBalance: creditBalance || 0, creditStatus: creditStatus || 'Good', address: address || '', passwordHash: defaultHash }
     });
-    res.json(newCustomer);
+    res.json(stripHash(newCustomer));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create customer' });
+  }
+});
+
+app.put('/api/customers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, type, tier, creditLimit, creditBalance, creditStatus, address } = req.body;
+    const updated = await prisma.customer.update({
+      where: { id },
+      data: { name, type, tier, creditLimit, creditBalance, creditStatus, address }
+    });
+    res.json(stripHash(updated));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -273,7 +303,7 @@ app.post('/api/orders', async (req, res) => {
       include: { items: true }
     });
 
-    // Write audit log â€” credit to whoever made the request
+    // Write audit log Ã¢â‚¬â€ credit to whoever made the request
     const actorId = req.headers['x-employee-id'] || 'system';
     const actorName = req.headers['x-user-name'] || 'System';
     await prisma.auditLog.create({
@@ -281,7 +311,7 @@ app.post('/api/orders', async (req, res) => {
         employeeId: actorId,
         userName: actorName,
         type: 'Order',
-        message: `Bulk order ${randomId} logged for ${customerName} â€” â‚¹${total.toFixed(2)}`
+        message: `Bulk order ${randomId} logged for ${customerName} Ã¢â‚¬â€ Ã¢â€šÂ¹${total.toFixed(2)}`
       }
     });
 
@@ -388,7 +418,7 @@ app.post('/api/deliveries', async (req, res) => {
       io.emit('new_notification', newNotif);
     }
 
-    // Dispatch audit log â€” credit to whoever dispatched
+    // Dispatch audit log Ã¢â‚¬â€ credit to whoever dispatched
     const dispatcherId = req.headers['x-employee-id'] || 'system';
     const dispatcherName = req.headers['x-user-name'] || 'System';
     await prisma.auditLog.create({
@@ -396,7 +426,7 @@ app.post('/api/deliveries', async (req, res) => {
         employeeId: dispatcherId,
         userName: dispatcherName,
         type: 'Dispatch',
-        message: `${runNumber} dispatched â€” Driver: ${driverName} | Vehicle: ${vehicleNo} | ${stops.length} stop(s)`
+        message: `${runNumber} dispatched Ã¢â‚¬â€ Driver: ${driverName} | Vehicle: ${vehicleNo} | ${stops.length} stop(s)`
       }
     });
 
@@ -514,12 +544,12 @@ app.put('/api/deliveries/:runId/stops/:orderId', async (req, res) => {
       data: { status: stopUpdate.status }
     });
 
-    // Write audit log for delivery stop update â€” credit the actual actor
+    // Write audit log for delivery stop update Ã¢â‚¬â€ credit the actual actor
     const actorId = req.headers['x-employee-id'] || 'system';
     const actorName = req.headers['x-user-name'] || 'System';
     const logMsg = stopUpdate.status === 'Delivered'
-      ? `Stop delivered to ${stop.customerName} â€” Signed by: ${stopUpdate.signedBy || 'N/A'} | Qty: ${stopUpdate.deliveredQty}`
-      : `Stop FAILED at ${stop.customerName} â€” Reason: ${stopUpdate.failedReason}`;
+      ? `Stop delivered to ${stop.customerName} Ã¢â‚¬â€ Signed by: ${stopUpdate.signedBy || 'N/A'} | Qty: ${stopUpdate.deliveredQty}`
+      : `Stop FAILED at ${stop.customerName} Ã¢â‚¬â€ Reason: ${stopUpdate.failedReason}`;
     await prisma.auditLog.create({
       data: { employeeId: actorId, userName: actorName, type: 'Dispatch', message: logMsg }
     });
@@ -789,7 +819,7 @@ app.post('/api/visits', async (req, res) => {
         employeeId: actorId,
         userName: actorName,
         type: 'Session',
-        message: `Field visit logged by ${salesmanName} at ${customerName}${followUpRequired ? ' â€” Follow-up required' : ''}`
+        message: `Field visit logged by ${salesmanName} at ${customerName}${followUpRequired ? ' Ã¢â‚¬â€ Follow-up required' : ''}`
       }
     });
 
@@ -802,7 +832,6 @@ app.post('/api/visits', async (req, res) => {
 
 
 // --- HEALTH CHECK & KEEP-ALIVE PINGER ---
-const https = require('https');
 
 
 // ONE-TIME SETUP ENDPOINT
@@ -871,4 +900,6 @@ if (!process.env.VERCEL) {
 }
 
 module.exports = app;
+
+
 
