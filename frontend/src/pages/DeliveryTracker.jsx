@@ -364,6 +364,49 @@ export default function DeliveryTracker({ user, showToast }) {
     }
   };
 
+  const handleOptimizeRoute = async () => {
+    if (selectedOrderIds.length < 2) return;
+    setIsOptimizing(true);
+    
+    // Artificial delay for UI polish
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Get selected orders data
+    const ordersToRoute = pendingOrders.filter(o => selectedOrderIds.includes(o.id));
+    let unvisited = [...ordersToRoute];
+    let optimizedIds = [];
+    
+    // Warehouse coordinates (starting point)
+    let currentPoint = { lat: 17.2570, lng: 78.4350 };
+    
+    while (unvisited.length > 0) {
+      let nearestIdx = 0;
+      let minDistance = Infinity;
+      
+      for (let i = 0; i < unvisited.length; i++) {
+        const order = unvisited[i];
+        // Calculate Euclidean distance (sufficient for small local maps)
+        const dist = Math.sqrt(
+          Math.pow(order.lat - currentPoint.lat, 2) + 
+          Math.pow(order.lng - currentPoint.lng, 2)
+        );
+        if (dist < minDistance) {
+          minDistance = dist;
+          nearestIdx = i;
+        }
+      }
+      
+      const nearestOrder = unvisited[nearestIdx];
+      optimizedIds.push(nearestOrder.id);
+      currentPoint = { lat: nearestOrder.lat, lng: nearestOrder.lng };
+      unvisited.splice(nearestIdx, 1);
+    }
+    
+    setSelectedOrderIds(optimizedIds);
+    setIsOptimizing(false);
+    showToast('Route Optimized', 'Stops rearranged using Nearest Neighbor algorithm for shortest path.', 'success');
+  };
+
   const handleStartRun = async (runId) => {
     try {
       await api.updateRunStatus(runId, 'In Transit');
@@ -899,7 +942,15 @@ export default function DeliveryTracker({ user, showToast }) {
                 </div>
                 <div className="staged-orders-list">
                   {pendingOrders.length > 0 ? (
-                    pendingOrders.map(order => {
+                    [...pendingOrders].sort((a, b) => {
+                      const idxA = selectedOrderIds.indexOf(a.id);
+                      const idxB = selectedOrderIds.indexOf(b.id);
+                      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                      if (idxA !== -1) return -1;
+                      if (idxB !== -1) return 1;
+                      return 0;
+                    }).map((order, index) => {
+
                       const isSelected = selectedOrderIds.includes(order.id);
                       return (
                         <div 
