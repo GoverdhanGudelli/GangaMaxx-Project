@@ -12,8 +12,18 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'gangamaxx-dev-secret-change-in-prod';
 
 const app = express();
-const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
+
+// Programmatically fix Supabase DATABASE_URL if it has an unescaped '#'
+let dbUrl = process.env.DATABASE_URL;
+if (dbUrl && dbUrl.includes('#') && dbUrl.includes('@')) {
+  const parts = dbUrl.split('#');
+  if (parts.length === 2 && parts[1].includes('@')) {
+    dbUrl = parts[0] + '%23' + parts[1];
+  }
+}
+const prisma = new PrismaClient(dbUrl ? { datasources: { db: { url: dbUrl } } } : undefined);
+
 
 // CORS â€” allow frontend origin or all in dev
 const ALLOWED_ORIGIN = process.env.FRONTEND_URL || '*';
