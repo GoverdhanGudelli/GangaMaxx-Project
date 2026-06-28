@@ -6,6 +6,11 @@ const https = require('https');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
+const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'gangamaxx-dev-secret-change-in-prod';
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +24,30 @@ app.use(express.json({ limit: '10mb' }));
 // ROUTES
 // ==========================================
 
+
+// --- RATE LIMITING ---
+app.set('trust proxy', 1); // Required for Render
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 15,
+  message: { error: 'Too many login attempts, please try again in 15 minutes.' }
+});
+app.use('/api/auth', authLimiter);
+
+// --- AUTH MIDDLEWARE ---
+const requireAuth = (req, res, next) => {
+  const header = req.headers['authorization'];
+  if (!header || !header.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  }
+  try {
+    req.user = jwt.verify(header.split(' ')[1], JWT_SECRET);
+    next();
+  } catch (_) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid or expired token' });
+  }
+};
 
 // --- AUTH ---
 app.post('/api/auth/login', async (req, res) => {
