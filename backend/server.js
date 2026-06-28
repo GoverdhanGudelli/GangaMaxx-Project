@@ -16,10 +16,15 @@ const PORT = process.env.PORT || 5000;
 
 // Programmatically fix Supabase DATABASE_URL if it has an unescaped '#'
 let dbUrl = process.env.DATABASE_URL;
-if (dbUrl && dbUrl.includes('#') && dbUrl.includes('@')) {
-  const parts = dbUrl.split('#');
-  if (parts.length === 2 && parts[1].includes('@')) {
-    dbUrl = parts[0] + '%23' + parts[1];
+if (dbUrl) {
+  if (dbUrl.includes('#') && dbUrl.includes('@')) {
+    const parts = dbUrl.split('#');
+    if (parts.length === 2 && parts[1].includes('@')) {
+      dbUrl = parts[0] + '%23' + parts[1];
+    }
+  }
+  if (dbUrl.includes('pooler.supabase.com') && !dbUrl.includes('pgbouncer=true')) {
+    dbUrl += dbUrl.includes('?') ? '&pgbouncer=true' : '?pgbouncer=true';
   }
 }
 const prisma = new PrismaClient(dbUrl ? { datasources: { db: { url: dbUrl } } } : undefined);
@@ -99,8 +104,8 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({ ...safeUser, token });
     
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error during login' });
+    console.error('Login Error:', error);
+    res.status(500).json({ error: 'Server error during login', details: error.message });
   }
 });
 
