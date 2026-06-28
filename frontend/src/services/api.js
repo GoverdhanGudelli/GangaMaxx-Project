@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:5000/api';
+
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://gangamaxx-project.onrender.com/api';
 
 const fetchAPI = async (endpoint, options = {}) => {
   // Read current session to attach actor identity to every request
@@ -6,9 +7,10 @@ const fetchAPI = async (endpoint, options = {}) => {
   let userName = '';
   try {
     const session = JSON.parse(localStorage.getItem('gm_session') || '{}');
+
     employeeId = session.employeeId || '';
     userName = session.name || '';
-  } catch (_) {}
+  } catch (_) { }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
@@ -60,9 +62,9 @@ export const api = {
       if (c.id === 'c1') { lat = 17.3080; lng = 78.1360; } // Chevella
       else if (c.id === 'c2') { lat = 17.3275; lng = 78.2728; } // Moinabad
       else if (c.id === 'c3') { lat = 17.1950; lng = 78.6465; } // Ibrahimpatnam
-      else { 
-        lat = 17.2 + (Math.random() * 0.15); 
-        lng = 78.2 + (Math.random() * 0.4); 
+      else {
+        lat = 17.2 + (Math.random() * 0.15);
+        lng = 78.2 + (Math.random() * 0.4);
       }
       return { ...c, lat, lng };
     });
